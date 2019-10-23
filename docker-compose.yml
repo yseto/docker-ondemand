@@ -1,0 +1,46 @@
+version: "3"
+services:
+  dondemand:
+    build:
+      context: ./app
+    ports:
+      - 5000:5000
+    depends_on:
+      - memcached
+      - sock-proxy
+
+  memcached:
+    image: memcached:alpine
+
+  sock-proxy:
+    image: tecnativa/docker-socket-proxy
+    privileged: true
+    container_name: dockerproxy
+    environment:
+      - CONTAINERS=1
+      - ALLOW_RESTARTS=1
+      - POST=1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  h2o:
+    image: lkwg82/h2o-http2-server
+    ports:
+      - 8080:8080
+    working_dir: /h2o
+    volumes:
+      - ./h2o/:/h2o/
+    depends_on:
+      - dondemand
+      - app_sample
+
+  app_sample:
+    image: jwilder/whoami
+    container_name: app_sample
+
+  dondemand_purge:
+    build:
+      context: ./purge
+    depends_on:
+      - dondemand
+

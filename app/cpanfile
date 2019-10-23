@@ -1,0 +1,10 @@
+requires 'Cache::Memcached::Fast::Safe';
+requires 'File::RotateLogs';
+requires 'Furl';
+requires 'JSON::XS';
+requires 'Module::Build';
+requires 'Module::Install';
+requires 'Plack';
+requires 'Starlet';
+requires 'Time::HiRes';
+requires 'URI';
